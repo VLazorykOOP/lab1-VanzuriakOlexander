@@ -151,6 +151,22 @@ int ConsoleInputArray(int sizeMax, double A[]) {
   return size;
 }
 
+int ConsoleReadArrayTextFile(int n, double *arr, const char *fileName) {
+  int size;
+  ifstream fin(fileName);
+  if (fin.fail())
+    return 0;
+  fin >> size;
+  if (size <= 0)
+    return 0;
+  if (size > n)
+    size = n;
+  for (int i = 0; i < n; i++)
+    fin >> arr[i];
+  fin.close();
+  return size;
+}
+
 int ConsoleInputArrayRandom(int sizeMax, double A[]) {
   int size = ConsoleInputSizeArray(sizeMax);
   int r1 = 0, r2 = 0;
@@ -196,6 +212,97 @@ int ConsoleInputDynamicArrayRandom(int sizeMax, pDouble &pA) {
   return size;
 }
 
+int ConsoleReadArrayBinFile(int n, double *arr, const char *fileName) {
+  int size = 0;
+  ifstream bfin(fileName, ios_base::binary);
+  if (bfin.fail())
+    return 0;
+  bfin.read((char *)&size, sizeof(int));
+  if (size <= 0)
+    return 0;
+  if (size > n)
+    size = n;
+  bfin.read((char *)arr, static_cast<std::streamsize>(size) * sizeof(double));
+  bfin.close();
+  // ssdhs
+  return size;
+}
+
+int inputLocalArray(int sizeMax, double A[]) {
+  int size;
+  switch (taskInput) {
+  case 1:
+    size = ConsoleInputArray(sizeMax, A);
+    break;
+  case 2:
+    size = ConsoleInputArrayRandom(sizeMax, A);
+  case 3:
+    size = ConsoleReadArrayTextFile(sizeMax, A, "1.txt");
+    break;
+  case 4:
+    size = ConsoleReadArrayBinFile(sizeMax, A, "1.bin");
+    break;
+  default:
+    break;
+  }
+  return size;
+}
+
+int ConsoleReadDynamicArrayTextFile(int n, pDouble &pA, const char *fileName) {
+  int size;
+  ifstream fin(fileName);
+  if (fin.fail())
+    return 0;
+  fin >> size;
+  if (size <= 0)
+    return 0;
+  if (size > n)
+    size = n;
+  pA = new double[size];
+  for (int i = 0; i < n; i++)
+    fin >> pA[i];
+  fin.close();
+  return size;
+}
+
+int ConsoleReadDynamicArrayBinFile(int n, pDouble &pA, const char *fileName) {
+  int size = 0;
+  ifstream bfin(fileName, ios_base::binary);
+  if (bfin.fail())
+    return 0;
+  bfin.read((char *)&size, sizeof(int));
+  if (size <= 0)
+    return 0;
+  if (size > n)
+    size = n;
+  pA = new double[size];
+  bfin.read((char *)pA, static_cast<std::streamsize>(size) * sizeof(double));
+  bfin.close();
+  // ssdhs
+  return size;
+}
+
+int inputDynamicArray(int sizeMax, pDouble &pA) {
+  int size;
+  switch (taskInput) {
+  case 1:
+    size = ConsoleInputDynamicArray_calloc(sizeMax, pA);
+    break;
+  case 2:
+    size = ConsoleInputDynamicArrayRandom(sizeMax, pA);
+    break;
+  case 3:
+    size = ConsoleReadDynamicArrayTextFile(sizeMax, pA, "1.txt");
+    break;
+  case 4:
+    size = ConsoleReadDynamicArrayBinFile(sizeMax, pA, "1.bin");
+    break;
+  default:
+    break;
+  }
+  return size;
+}
+
 int ConsoleInputDynamicArrayNew(int sizeMax, pDouble &pA) {
   int size = ConsoleInputSizeArray(sizeMax);
   pA = new double[size];
@@ -209,7 +316,29 @@ int ConsoleInputDynamicArrayNew(int sizeMax, pDouble &pA) {
   return size;
 }
 
-void ConsoleInputVector(int sizeMax, vector<double> &A) {
+
+int inputDynamicArrayNew(int sizeMax, pDouble &pA) {
+  int size;
+  switch (taskInput) {
+  case 1:
+    size = ConsoleInputDynamicArrayNew(sizeMax, pA);
+    break;
+  case 2:
+    size = ConsoleInputDynamicArrayRandom(sizeMax, pA);
+    break;
+  case 3:
+    size = ConsoleReadDynamicArrayTextFile(sizeMax, pA, "1.txt");
+    break;
+  case 4:
+    size = ConsoleReadDynamicArrayBinFile(sizeMax, pA, "1.bin");
+    break;
+  default:
+    break;
+  }
+  return size;
+}
+
+int ConsoleInputVector(int sizeMax, vector<double> &A) {
   int size = ConsoleInputSizeArray(sizeMax);
   double d;
   for (int i = 0; i < size; i++) {
@@ -217,54 +346,161 @@ void ConsoleInputVector(int sizeMax, vector<double> &A) {
     cin >> d;
     A.push_back(d);
   }
-  return;
+  return size;
 }
 
-void inputLocalArray(int sizeMax, double A[]) {
+int ConsoleInputVectorRandom(int sizeMax, vector<double> &A) {
+  int size = ConsoleInputSizeArray(sizeMax);
+  double d;
+  int r1 = 0, r2 = 0;
+  srand(size);
+
+  for (int i = 0; i < size; i++) {
+    r1 = rand();
+    r2 = rand();
+    d = 100.0 * r1;
+    d = d / (1.0 + r2);
+    A.push_back(d);
+    cout << A[i] << "   ";
+  }
+
+  return size;
+}
+
+int ReadInputVectorTextFile(int n, vector<double> &A, const char *fileName) {
+  int size;
+  double d;
+  ifstream fin(fileName);
+  if (fin.fail())
+    return 0;
+  fin >> size;
+  if (size <= 0)
+    return 0;
+  for (int i = 0; i < size; i++) {
+    fin >> d;
+    A.push_back(d);
+  }
+  fin.close();
+  return size;
+}
+
+int ReadArrayVectorBinFile(int n, vector<double> &A, const char *fileName) {
+  int size = 0;
+  double d;
+  ifstream bfin(fileName, ios_base::binary);
+  if (bfin.fail())
+    return 0;
+  bfin.read((char *)&size, sizeof(int));
+  if (size <= 0)
+    return 0;
+  if (size > n)
+    size = n;
+  for (int i=0; i < size; i++) {
+    bfin.read(reinterpret_cast<char*>(&d), sizeof(double));
+    A.push_back(d);
+  }
+  bfin.close();
+  // ssdhs
+  return size;
+}
+
+int inputVector(int sizeMax, vector<double> &A) {
+  int size;
   switch (taskInput) {
   case 1:
-    ConsoleInputArray(sizeMax, A);
+    size = ConsoleInputVector(sizeMax, A);
     break;
   case 2:
-    ConsoleInputArrayRandom(sizeMax, A);
+    size = ConsoleInputVectorRandom(sizeMax, A);
+    break;
   case 3:
+    size = ReadInputVectorTextFile(sizeMax, A, "1.txt");
     break;
   case 4:
+    size = ReadArrayVectorBinFile(sizeMax, A, "1.bin");
     break;
   default:
     break;
   }
-}
-
-void inputDynamicArray(int sizeMax, pDouble &pA) {
-  switch (taskInput) {
-  case 1:
-    ConsoleInputDynamicArray_calloc(sizeMax, pA);
-    break;
-  case 2:
-    ConsoleInputDynamicArrayRandom(sizeMax, pA);
-  case 3:
-    break;
-  case 4:
-    break;
-  default:
-    break;
-  }
+  return size;
 }
 
 void task1() {
+  double B[MAX_SIZE];
+  int nB = 0;
+  int nA;
+  vector<double> vA;
   switch (taskType) {
   case 1:
     double A[MAX_SIZE];
-    inputLocalArray(MAX_SIZE, A);
-    // solution
-    // output
+    nA = inputLocalArray(MAX_SIZE, A);
+    for (int i = 0; i < nA; i++) {
+        if (A[i] >= 0) {
+            B[nB++] = A[i];
+        }
+    }
+
+    if (nB) {
+        cout << "B array:" << endl;
+        for (int i = 0; i < nB; i++) {
+            cout << "B[" << i << "]=" << B[i] << endl;
+        }
+    } else {
+        cout << "B array has no elements";
+    }
     break;
   case 2:
     pDouble pA;
-    inputDynamicArray(MAX_SIZE, pA);
-    // solution
-    // output
+    nA = inputDynamicArray(MAX_SIZE, pA);
+    for (int i = 0; i < nA; i++) {
+        if (pA[i] >= 0) {
+            B[nB++] = pA[i];
+        }
+    }
+
+    if (nB) {
+        cout << "B array:" << endl;
+        for (int i = 0; i < nB; i++) {
+            cout << "B[" << i << "]=" << B[i] << endl;
+        }
+    } else {
+        cout << "B array has no elements";
+    }
+    break;
+  case 3:
+    pDouble pB;
+    nA = inputDynamicArrayNew(MAX_SIZE, pB);
+    for (int i = 0; i < nA; i++) {
+        if (pB[i] >= 0) {
+            B[nB++] = pB[i];
+        }
+    }
+
+    if (nB) {
+        cout << "B array:" << endl;
+        for (int i = 0; i < nB; i++) {
+            cout << "B[" << i << "]=" << B[i] << endl;
+        }
+    } else {
+        cout << "B array has no elements";
+    }
+    break;
+  case 4:
+    nA = inputVector(MAX_SIZE, vA);
+    for (auto v : vA) {
+        if(v >= 0) {
+          B[nB++] = v;
+        }
+    }
+
+    if (nB) {
+        cout << "B array:" << endl;
+        for (int i = 0; i < nB; i++) {
+            cout << "B[" << i << "]=" << B[i] << endl;
+        }
+    } else {
+        cout << "B array has no elements";
+    }
     break;
   default:
     break;
