@@ -233,7 +233,7 @@ int ConsoleReadArrayBinFile(int n, double *arr, const char *fileName) {
   return size;
 }
 
-int inputLocalArray(int sizeMax, double A[]) {
+int InputLocalArray(int sizeMax, double A[]) {
   int size;
   switch (taskInput) {
   case 1:
@@ -287,7 +287,7 @@ int ConsoleReadDynamicArrayBinFile(int n, pDouble &pA, const char *fileName) {
   return size;
 }
 
-int inputDynamicArray(int sizeMax, pDouble &pA) {
+int InputDynamicArray(int sizeMax, pDouble &pA) {
   int size;
   switch (taskInput) {
   case 1:
@@ -321,7 +321,7 @@ int ConsoleInputDynamicArrayNew(int sizeMax, pDouble &pA) {
   return size;
 }
 
-int inputDynamicArrayNew(int sizeMax, pDouble &pA) {
+int InputDynamicArrayNew(int sizeMax, pDouble &pA) {
   int size;
   switch (taskInput) {
   case 1:
@@ -410,7 +410,27 @@ int ReadArrayVectorBinFile(int n, vector<double> &A, const char *fileName) {
   return size;
 }
 
-int inputVector(int sizeMax, vector<double> &A) {
+void WriteArrayTextFile(int n, double *arr, const char *fileName) {
+  ofstream fout(fileName);
+  if (fout.fail())
+    return;
+  fout << n << endl;
+  for (int i = 0; i < n; i++)
+    fout << arr[i] << "   ";
+  fout.close(); //
+}
+
+void WriteArrayBinFile(int n, double *arr, const char *fileName) {
+  ofstream fout(fileName, ios_base::binary);
+  if (fout.fail())
+    return;
+  fout << n << endl;
+  for (int i = 0; i < n; i++)
+    fout << arr[i] << "   ";
+  fout.close(); //
+}
+
+int InputVector(int sizeMax, vector<double> &A) {
   int size;
   switch (taskInput) {
   case 1:
@@ -436,13 +456,12 @@ int inputVector(int sizeMax, vector<double> &A) {
 
 void task1() {
   double B[MAX_SIZE];
-  int nB = 0;
-  int nA;
+  int nB = 0, nA;
   vector<double> vA;
   switch (taskType) {
   case 1:
     double A[MAX_SIZE];
-    nA = inputLocalArray(MAX_SIZE, A);
+    nA = InputLocalArray(MAX_SIZE, A);
     for (int i = 0; i < nA; i++) {
       if (A[i] >= 0) {
         B[nB++] = A[i];
@@ -460,7 +479,7 @@ void task1() {
     break;
   case 2:
     pDouble pA;
-    nA = inputDynamicArray(MAX_SIZE, pA);
+    nA = InputDynamicArray(MAX_SIZE, pA);
     for (int i = 0; i < nA; i++) {
       if (pA[i] >= 0) {
         B[nB++] = pA[i];
@@ -468,17 +487,14 @@ void task1() {
     }
 
     if (nB) {
-      cout << "B array:" << endl;
-      for (int i = 0; i < nB; i++) {
-        cout << "B[" << i << "]=" << B[i] << endl;
-      }
+      WriteArrayBinFile(nB, B, "Result.bin");
     } else {
       cout << "B array has no elements";
     }
     break;
   case 3:
     pDouble pB;
-    nA = inputDynamicArrayNew(MAX_SIZE, pB);
+    nA = InputDynamicArrayNew(MAX_SIZE, pB);
     for (int i = 0; i < nA; i++) {
       if (pB[i] >= 0) {
         B[nB++] = pB[i];
@@ -486,16 +502,13 @@ void task1() {
     }
 
     if (nB) {
-      cout << "B array:" << endl;
-      for (int i = 0; i < nB; i++) {
-        cout << "B[" << i << "]=" << B[i] << endl;
-      }
+      WriteArrayTextFile(nB, B, "Result.txt");
     } else {
       cout << "B array has no elements";
     }
     break;
   case 4:
-    nA = inputVector(MAX_SIZE, vA);
+    nA = InputVector(MAX_SIZE, vA);
     for (auto v : vA) {
       if (v >= 0) {
         B[nB++] = v;
@@ -520,15 +533,15 @@ void task1() {
 // починаючи з першого елемента, більшого заданого числа Т.
 
 void task2() {
-  int nA;
   double max = 0, T;
   int numberOfElement = 0;
   int number = -1;
+  int nA;
   vector<double> vA;
   switch (taskType) {
   case 1:
     double A[MAX_SIZE];
-    nA = inputLocalArray(MAX_SIZE, A);
+    nA = InputLocalArray(MAX_SIZE, A);
     cout << "Enter the T number:";
     cin >> T;
     for (int i = 0; i < nA; i++) {
@@ -546,7 +559,7 @@ void task2() {
     break;
   case 2:
     pDouble pA;
-    nA = inputDynamicArray(MAX_SIZE, pA);
+    nA = InputDynamicArray(MAX_SIZE, pA);
     cout << "Enter the T number:";
     cin >> T;
     for (int i = 0; i < nA; i++) {
@@ -563,7 +576,7 @@ void task2() {
     break;
   case 3:
     pDouble pB;
-    nA = inputDynamicArrayNew(MAX_SIZE, pB);
+    nA = InputDynamicArrayNew(MAX_SIZE, pB);
     cout << "Enter the T number:";
     cin >> T;
     for (int i = 0; i < nA; i++) {
@@ -579,7 +592,7 @@ void task2() {
     }
     break;
   case 4:
-    nA = inputVector(MAX_SIZE, vA);
+    nA = InputVector(MAX_SIZE, vA);
     cout << "Enter the T number:";
     cin >> T;
     for (auto v : vA) {
@@ -600,44 +613,46 @@ void task2() {
   }
 }
 
-// Задано дійсні величини a, b (a < b) і масив чисел X(N) 
+// Задано дійсні величини a, b (a < b) і масив чисел X(N)
 // Розробити програму, яка обчислує суму всіх X(i) < a,
 // Добуток всіх X(i) > b,
-// знаходить max і min серед X(i)є[a, b], i=1,2,..,n; 
+// знаходить max і min серед X(i)є[a, b], i=1,2,..,n;
 
 void task3() {
   double max, min, sum = 0, multiple = 1;
-  int a, b, i, nX;
+  int a, b, nX;
+  bool found = false;
   vector<double> vX;
   switch (taskType) {
   case 1:
     double X[MAX_SIZE];
-    nX = inputLocalArray(MAX_SIZE, X);
+    nX = InputLocalArray(MAX_SIZE, X);
     cout << "Please enter the a number:";
     cin >> a;
     cout << "Please enter the b number:";
     cin >> b;
 
-    for (i = 0; i < nX; i++) {
+    for (int i = 0; i < nX; i++) {
       if (X[i] < a) {
         sum += X[i];
       } else if (X[i] > b) {
         multiple *= X[i];
       } else {
-        min = X[i];
-        max = X[i];
-      }
-    }
+        if (!found) {
+          min = X[i];
+          max = X[i];
+          found = true;
+          continue;
+        }
 
-    for (i = 0; i < nX; i++) {
-      if (X[i] >= a && X[i] <= b) {
         if (min >= X[i]) {
           min = X[i];
         } else if (max <= X[i]) {
           max = X[i];
         };
-      };
-    };
+      }
+    }
+
     cout << "The min number in interval [a, b]: " << min << endl;
     cout << "The max number in interval [a, b]: " << max << endl;
     cout << "The sum of elements low then a: " << sum << endl;
@@ -645,31 +660,32 @@ void task3() {
     break;
   case 2:
     pDouble pX;
-    nX = inputDynamicArray(MAX_SIZE, pX);
+    nX = InputDynamicArray(MAX_SIZE, pX);
     cout << "Please enter the a number:";
     cin >> a;
     cout << "Please enter the b number:";
     cin >> b;
-    for (i = 0; i < nX; i++) {
+    for (int i = 0; i < nX; i++) {
       if (pX[i] < a) {
         sum += pX[i];
       } else if (pX[i] > b) {
-        multiple *= X[i];
+        multiple *= pX[i];
       } else {
-        min = pX[i];
-        max = pX[i];
-      }
-    }
+        if (!found) {
+          min = pX[i];
+          max = pX[i];
+          found = true;
+          continue;
+        }
 
-    for (i = 0; i < nX; i++) {
-      if (pX[i] >= a && pX[i] <= b) {
         if (min >= pX[i]) {
           min = pX[i];
         } else if (max <= pX[i]) {
           max = pX[i];
         };
-      };
-    };
+      }
+    }
+
     cout << "The min number in interval [a, b]: " << min << endl;
     cout << "The max number in interval [a, b]: " << max << endl;
     cout << "The sum of elements low then a: " << sum << endl;
@@ -677,38 +693,39 @@ void task3() {
     break;
   case 3:
     pDouble pX1;
-    nX = inputDynamicArrayNew(MAX_SIZE, pX1);
+    nX = InputDynamicArrayNew(MAX_SIZE, pX1);
     cout << "Please enter the a number:";
     cin >> a;
     cout << "Please enter the b number:";
     cin >> b;
-    for (i = 0; i < nX; i++) {
+    for (int i = 0; i < nX; i++) {
       if (pX[i] < a) {
         sum += pX[i];
       } else if (pX[i] > b) {
         multiple *= X[i];
       } else {
-        min = pX[i];
-        max = pX[i];
-      }
-    }
+        if (!found) {
+          min = pX[i];
+          max = pX[i];
+          found = true;
+          continue;
+        }
 
-    for (i = 0; i < nX; i++) {
-      if (pX[i] >= a && pX[i] <= b) {
         if (min >= pX[i]) {
           min = pX[i];
         } else if (max <= pX[i]) {
           max = pX[i];
         };
-      };
-    };
+      }
+    }
+
     cout << "The min number in interval [a, b]: " << min << endl;
     cout << "The max number in interval [a, b]: " << max << endl;
     cout << "The sum of elements low then a: " << sum << endl;
     cout << "The multiple of elements high than b: " << multiple;
     break;
   case 4:
-    nX = inputVector(MAX_SIZE, vX);
+    nX = InputVector(MAX_SIZE, vX);
     cout << "Please enter the a number:";
     cin >> a;
     cout << "Please enter the b number:";
@@ -719,20 +736,20 @@ void task3() {
       } else if (v > b) {
         multiple *= v;
       } else {
-        min = v;
-        max = v;
-      }
-    }
+        if (!found) {
+          min = v;
+          max = v;
+          found = true;
+          continue;
+        }
 
-    for (auto v : vX) {
-      if (v >= a && v <= b) {
         if (min >= v) {
           min = v;
         } else if (max <= v) {
           max = v;
         };
-      };
-    };
+      }
+    }
 
     cout << "The min number in interval [a, b]: " << min << endl;
     cout << "The max number in interval [a, b]: " << max << endl;
