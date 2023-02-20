@@ -180,7 +180,7 @@ int ConsoleInputArrayRandom(int sizeMax, double A[]) {
     cout << A[i] << "   ";
   }
 
-   cout<<endl;
+  cout << endl;
 
   return size;
 }
@@ -212,7 +212,7 @@ int ConsoleInputDynamicArrayRandom(int sizeMax, pDouble &pA) {
     cout << pA[i] << "   ";
   }
 
-   cout<<endl;
+  cout << endl;
 
   return size;
 }
@@ -368,7 +368,7 @@ int ConsoleInputVectorRandom(int sizeMax, vector<double> &A) {
     cout << A[i] << "   ";
   }
 
-  cout<<endl;
+  cout << endl;
 
   return size;
 }
@@ -431,7 +431,8 @@ int inputVector(int sizeMax, vector<double> &A) {
   return size;
 }
 
-// Із одновимірного масиву А розміру N побудувати масив В із всіх додатних елементів.
+// Із одновимірного масиву А розміру N побудувати масив В із всіх додатних
+// елементів.
 
 void task1() {
   double B[MAX_SIZE];
@@ -577,7 +578,7 @@ void task2() {
       cout << "Number not found" << endl;
     }
     break;
-  case 4: 
+  case 4:
     nA = inputVector(MAX_SIZE, vA);
     cout << "Enter the T number:";
     cin >> T;
@@ -585,8 +586,13 @@ void task2() {
       if (v > T && v >= max && v >= 0) {
         max = v;
         number = numberOfElement;
-        numberOfElement++;
       }
+      numberOfElement++;
+    }
+    if (number != -1) {
+      cout << "The number of last element higher than T: " << number;
+    } else {
+      cout << "Number not found" << endl;
     }
     break;
   default:
@@ -594,7 +600,148 @@ void task2() {
   }
 }
 
-void task3() { cout << "3"; }
+// Задано дійсні величини a, b (a < b) і масив чисел X(N) 
+// Розробити програму, яка обчислує суму всіх X(i) < a,
+// Добуток всіх X(i) > b,
+// знаходить max і min серед X(i)є[a, b], i=1,2,..,n; 
+
+void task3() {
+  double max, min, sum = 0, multiple = 1;
+  int a, b, i, nX;
+  vector<double> vX;
+  switch (taskType) {
+  case 1:
+    double X[MAX_SIZE];
+    nX = inputLocalArray(MAX_SIZE, X);
+    cout << "Please enter the a number:";
+    cin >> a;
+    cout << "Please enter the b number:";
+    cin >> b;
+
+    for (i = 0; i < nX; i++) {
+      if (X[i] < a) {
+        sum += X[i];
+      } else if (X[i] > b) {
+        multiple *= X[i];
+      } else {
+        min = X[i];
+        max = X[i];
+      }
+    }
+
+    for (i = 0; i < nX; i++) {
+      if (X[i] >= a && X[i] <= b) {
+        if (min >= X[i]) {
+          min = X[i];
+        } else if (max <= X[i]) {
+          max = X[i];
+        };
+      };
+    };
+    cout << "The min number in interval [a, b]: " << min << endl;
+    cout << "The max number in interval [a, b]: " << max << endl;
+    cout << "The sum of elements low then a: " << sum << endl;
+    cout << "The multiple of elements high than b: " << multiple;
+    break;
+  case 2:
+    pDouble pX;
+    nX = inputDynamicArray(MAX_SIZE, pX);
+    cout << "Please enter the a number:";
+    cin >> a;
+    cout << "Please enter the b number:";
+    cin >> b;
+    for (i = 0; i < nX; i++) {
+      if (pX[i] < a) {
+        sum += pX[i];
+      } else if (pX[i] > b) {
+        multiple *= X[i];
+      } else {
+        min = pX[i];
+        max = pX[i];
+      }
+    }
+
+    for (i = 0; i < nX; i++) {
+      if (pX[i] >= a && pX[i] <= b) {
+        if (min >= pX[i]) {
+          min = pX[i];
+        } else if (max <= pX[i]) {
+          max = pX[i];
+        };
+      };
+    };
+    cout << "The min number in interval [a, b]: " << min << endl;
+    cout << "The max number in interval [a, b]: " << max << endl;
+    cout << "The sum of elements low then a: " << sum << endl;
+    cout << "The multiple of elements high than b: " << multiple;
+    break;
+  case 3:
+    pDouble pX1;
+    nX = inputDynamicArrayNew(MAX_SIZE, pX1);
+    cout << "Please enter the a number:";
+    cin >> a;
+    cout << "Please enter the b number:";
+    cin >> b;
+    for (i = 0; i < nX; i++) {
+      if (pX[i] < a) {
+        sum += pX[i];
+      } else if (pX[i] > b) {
+        multiple *= X[i];
+      } else {
+        min = pX[i];
+        max = pX[i];
+      }
+    }
+
+    for (i = 0; i < nX; i++) {
+      if (pX[i] >= a && pX[i] <= b) {
+        if (min >= pX[i]) {
+          min = pX[i];
+        } else if (max <= pX[i]) {
+          max = pX[i];
+        };
+      };
+    };
+    cout << "The min number in interval [a, b]: " << min << endl;
+    cout << "The max number in interval [a, b]: " << max << endl;
+    cout << "The sum of elements low then a: " << sum << endl;
+    cout << "The multiple of elements high than b: " << multiple;
+    break;
+  case 4:
+    nX = inputVector(MAX_SIZE, vX);
+    cout << "Please enter the a number:";
+    cin >> a;
+    cout << "Please enter the b number:";
+    cin >> b;
+    for (auto v : vX) {
+      if (v < a) {
+        sum += v;
+      } else if (v > b) {
+        multiple *= v;
+      } else {
+        min = v;
+        max = v;
+      }
+    }
+
+    for (auto v : vX) {
+      if (v >= a && v <= b) {
+        if (min >= v) {
+          min = v;
+        } else if (max <= v) {
+          max = v;
+        };
+      };
+    };
+
+    cout << "The min number in interval [a, b]: " << min << endl;
+    cout << "The max number in interval [a, b]: " << max << endl;
+    cout << "The sum of elements low then a: " << sum << endl;
+    cout << "The multiple of elements high than b: " << multiple;
+  default:
+    break;
+  }
+}
 
 void execTask() {
   switch (taskNumber) {
