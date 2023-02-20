@@ -179,13 +179,15 @@ int ConsoleInputArrayRandom(int sizeMax, double A[]) {
     A[i] = A[i] / (1.0 + r2);
     cout << A[i] << "   ";
   }
+
+   cout<<endl;
+
   return size;
 }
 
 int ConsoleInputDynamicArray_calloc(int sizeMax, pDouble &pA) {
   int size = ConsoleInputSizeArray(sizeMax);
-  pA = (double *)calloc(
-      size, sizeof(double));
+  pA = (double *)calloc(size, sizeof(double));
   if (pA == nullptr) {
     return 0;
   }
@@ -209,6 +211,9 @@ int ConsoleInputDynamicArrayRandom(int sizeMax, pDouble &pA) {
     pA[i] = pA[i] / (1.0 + r2);
     cout << pA[i] << "   ";
   }
+
+   cout<<endl;
+
   return size;
 }
 
@@ -316,7 +321,6 @@ int ConsoleInputDynamicArrayNew(int sizeMax, pDouble &pA) {
   return size;
 }
 
-
 int inputDynamicArrayNew(int sizeMax, pDouble &pA) {
   int size;
   switch (taskInput) {
@@ -364,6 +368,8 @@ int ConsoleInputVectorRandom(int sizeMax, vector<double> &A) {
     cout << A[i] << "   ";
   }
 
+  cout<<endl;
+
   return size;
 }
 
@@ -395,8 +401,8 @@ int ReadArrayVectorBinFile(int n, vector<double> &A, const char *fileName) {
     return 0;
   if (size > n)
     size = n;
-  for (int i=0; i < size; i++) {
-    bfin.read(reinterpret_cast<char*>(&d), sizeof(double));
+  for (int i = 0; i < size; i++) {
+    bfin.read(reinterpret_cast<char *>(&d), sizeof(double));
     A.push_back(d);
   }
   bfin.close();
@@ -425,6 +431,8 @@ int inputVector(int sizeMax, vector<double> &A) {
   return size;
 }
 
+// Із одновимірного масиву А розміру N побудувати масив В із всіх додатних елементів.
+
 void task1() {
   double B[MAX_SIZE];
   int nB = 0;
@@ -435,84 +443,156 @@ void task1() {
     double A[MAX_SIZE];
     nA = inputLocalArray(MAX_SIZE, A);
     for (int i = 0; i < nA; i++) {
-        if (A[i] >= 0) {
-            B[nB++] = A[i];
-        }
+      if (A[i] >= 0) {
+        B[nB++] = A[i];
+      }
     }
 
     if (nB) {
-        cout << "B array:" << endl;
-        for (int i = 0; i < nB; i++) {
-            cout << "B[" << i << "]=" << B[i] << endl;
-        }
+      cout << "B array:" << endl;
+      for (int i = 0; i < nB; i++) {
+        cout << "B[" << i << "]=" << B[i] << endl;
+      }
     } else {
-        cout << "B array has no elements";
+      cout << "B array has no elements";
     }
     break;
   case 2:
     pDouble pA;
     nA = inputDynamicArray(MAX_SIZE, pA);
     for (int i = 0; i < nA; i++) {
-        if (pA[i] >= 0) {
-            B[nB++] = pA[i];
-        }
+      if (pA[i] >= 0) {
+        B[nB++] = pA[i];
+      }
     }
 
     if (nB) {
-        cout << "B array:" << endl;
-        for (int i = 0; i < nB; i++) {
-            cout << "B[" << i << "]=" << B[i] << endl;
-        }
+      cout << "B array:" << endl;
+      for (int i = 0; i < nB; i++) {
+        cout << "B[" << i << "]=" << B[i] << endl;
+      }
     } else {
-        cout << "B array has no elements";
+      cout << "B array has no elements";
     }
     break;
   case 3:
     pDouble pB;
     nA = inputDynamicArrayNew(MAX_SIZE, pB);
     for (int i = 0; i < nA; i++) {
-        if (pB[i] >= 0) {
-            B[nB++] = pB[i];
-        }
+      if (pB[i] >= 0) {
+        B[nB++] = pB[i];
+      }
     }
 
     if (nB) {
-        cout << "B array:" << endl;
-        for (int i = 0; i < nB; i++) {
-            cout << "B[" << i << "]=" << B[i] << endl;
-        }
+      cout << "B array:" << endl;
+      for (int i = 0; i < nB; i++) {
+        cout << "B[" << i << "]=" << B[i] << endl;
+      }
     } else {
-        cout << "B array has no elements";
+      cout << "B array has no elements";
     }
     break;
   case 4:
     nA = inputVector(MAX_SIZE, vA);
     for (auto v : vA) {
-        if(v >= 0) {
-          B[nB++] = v;
-        }
+      if (v >= 0) {
+        B[nB++] = v;
+      }
     }
 
     if (nB) {
-        cout << "B array:" << endl;
-        for (int i = 0; i < nB; i++) {
-            cout << "B[" << i << "]=" << B[i] << endl;
-        }
+      cout << "B array:" << endl;
+      for (int i = 0; i < nB; i++) {
+        cout << "B[" << i << "]=" << B[i] << endl;
+      }
     } else {
-        cout << "B array has no elements";
+      cout << "B array has no elements";
     }
     break;
   default:
     break;
   }
-
-  // double A[MAX_SIZE];
-  // pDouble pA;
-  // vector<double> vA;
-
 }
 
-void task2() { cout << "2"; }
+// Знайти номер останнього максимального елемента серед додатних елементів,
+// починаючи з першого елемента, більшого заданого числа Т.
+
+void task2() {
+  int nA;
+  double max = 0, T;
+  int numberOfElement = 0;
+  int number = -1;
+  vector<double> vA;
+  switch (taskType) {
+  case 1:
+    double A[MAX_SIZE];
+    nA = inputLocalArray(MAX_SIZE, A);
+    cout << "Enter the T number:";
+    cin >> T;
+    for (int i = 0; i < nA; i++) {
+      if (A[i] > T && A[i] >= max && A[i] >= 0) {
+        max = A[i];
+        number = i;
+      }
+    }
+
+    if (number != -1) {
+      cout << "The number of last element higher than T: " << number;
+    } else {
+      cout << "Number not found" << endl;
+    }
+    break;
+  case 2:
+    pDouble pA;
+    nA = inputDynamicArray(MAX_SIZE, pA);
+    cout << "Enter the T number:";
+    cin >> T;
+    for (int i = 0; i < nA; i++) {
+      if (pA[i] > T && pA[i] >= max && pA[i] >= 0) {
+        max = pA[i];
+        number = i;
+      }
+    }
+    if (number != -1) {
+      cout << "The number of last element higher than T: " << number;
+    } else {
+      cout << "Number not found" << endl;
+    }
+    break;
+  case 3:
+    pDouble pB;
+    nA = inputDynamicArrayNew(MAX_SIZE, pB);
+    cout << "Enter the T number:";
+    cin >> T;
+    for (int i = 0; i < nA; i++) {
+      if (pB[i] > T && pB[i] >= max && pB[i] >= 0) {
+        max = pB[i];
+        number = i;
+      }
+    }
+    if (number != -1) {
+      cout << "The number of last element higher than T: " << number;
+    } else {
+      cout << "Number not found" << endl;
+    }
+    break;
+  case 4: 
+    nA = inputVector(MAX_SIZE, vA);
+    cout << "Enter the T number:";
+    cin >> T;
+    for (auto v : vA) {
+      if (v > T && v >= max && v >= 0) {
+        max = v;
+        number = numberOfElement;
+        numberOfElement++;
+      }
+    }
+    break;
+  default:
+    break;
+  }
+}
 
 void task3() { cout << "3"; }
 
