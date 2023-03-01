@@ -241,6 +241,7 @@ int InputLocalArray(int sizeMax, double A[]) {
     break;
   case 2:
     size = ConsoleInputArrayRandom(sizeMax, A);
+    break;
   case 3:
     size = ConsoleReadArrayTextFile(sizeMax, A, "1.txt");
     break;
@@ -679,6 +680,7 @@ void task3() {
         }
 
         if (min >= pX[i]) {
+          cout << "1";
           min = pX[i];
         } else if (max <= pX[i]) {
           max = pX[i];
@@ -755,6 +757,7 @@ void task3() {
     cout << "The max number in interval [a, b]: " << max << endl;
     cout << "The sum of elements low then a: " << sum << endl;
     cout << "The multiple of elements high than b: " << multiple;
+    break;
   default:
     break;
   }
